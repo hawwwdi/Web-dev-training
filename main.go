@@ -51,7 +51,7 @@ func parseReq(reader io.Reader) bool {
 }
 
 func sendRes(writer io.Writer) {
-	body := `<!DOCTYPE html><html lang="en"><head><meta charset="UTF-8"><title></title></head><body><strong>holy shiiiiiit</strong></body></html>`
+	body := `<!DOCTYPE html><html lang="en"><head><meta charset="UTF-8"><title></title></head><body><strong>hello world :)</strong></body></html>`
 	res := model.NewBuilder().Protocol("HTTP/1.1").Headers(
 		"Content-Length", fmt.Sprint(len(body)),
 		"Content-Type", " text/html").Body(body).Status("200 OK").Build()
