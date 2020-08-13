@@ -1,0 +1,65 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>main page</title>
+</head>
+
+<body>
+    {{if .}}
+    <main>
+        {{if .Method}}<p>The request method: {{.Method}}</p>{{end}}
+
+        {{if .URL}}<p>The request URL:</p>
+        <ul>
+            <li>Scheme: {{.URL.Scheme}}</li>
+            <li>Opaque: {{.URL.Opaque}}</li>
+            <li>Host: {{.URL.Host}}</li>
+            <li>Path: {{.URL.Path}}</li>
+            <li>RawPath: {{.URL.RawPath}}</li>
+            <li>ForceQuery: {{.URL.ForceQuery}}</li>
+            <li>RawQuery: {{.URL.RawQuery}}</li>
+            <li>Fragment: {{.URL.Fragment}}</li>
+        </ul>
+        {{end}}
+        {{if .Headers}}
+        {{range $k, $v := .Headers}}
+        <h5>{{$k}}</h5>
+        <ul>
+            {{range $v}}
+            <li>{{.}}</li>
+            {{end}}
+        </ul>
+        {{end}}
+        {{end}}
+        <p><strong>variable names</strong>(identifers) and <em>values</em>:</p>
+        {{range $key, $value := .Forms}}
+        <strong>vlaues of {{$key}} is:</strong>
+        <ul>
+            {{range $value}}
+            <li><em>{{.}}</em></li>
+            {{end}}
+        </ul>
+        {{end}}
+    </main>
+    {{end}}
+
+    <form method="POST" autocomplete="on">
+        <fieldset>
+            <legend>field set</legend>
+            <input type="radio" id="male" name="gender" value="male">
+            <label for="male">Male</label><br>
+            <input type="radio" id="female" name="gender" value="female">
+            <label for="female">female</label><br>
+            <input type="radio" id="other" name="gender" value="other">
+            <label for="other">Other</label><br>
+            <input type="text" id="sth-else" name="sth-else" value="somthing else...">
+            <label for="sth-else"><em>type here</em></label><br>
+            <input type="submit" value="POST">
+        </fieldset>
+    </form>
+</body>
+
+</html>

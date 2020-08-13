@@ -8,7 +8,7 @@ import (
 	"net"
 	"strings"
 
-	"github.com/hawwwdi/TCP-server/model"
+	"github.com/hawwwdi/web-dev-training/tcp-serever/model"
 )
 
 func main() {
