@@ -7,11 +7,9 @@
             "label": "run",
             "type": "shell",
             "command": "go run main.go",
-            "problemMatcher": [],
-            "group": {
-                "kind": "build",
-                "isDefault": true
-            }
+            "problemMatcher": [
+                "$go"
+            ]
         }
     ]
 }

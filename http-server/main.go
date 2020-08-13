@@ -2,28 +2,28 @@ package main
 
 import (
 	"bufio"
-	"fmt"
 	"html/template"
 	"log"
 	"net/http"
 	"net/url"
 )
 
-type index struct {
-	tpl *template.Template
+var tpl *template.Template
+
+func init() {
+	tpl = template.Must(template.ParseFiles("templates/index.html"))
 }
 
 func main() {
-	template := &index{
-		tpl: template.Must(template.ParseFiles("templates/index.html")),
-	}
-	err := http.ListenAndServe(":8080", template)
+	mux := http.NewServeMux()
+	mux.HandleFunc("/", serveHTTP)
+	err := http.ListenAndServe(":8080", mux)
 	if err != nil {
 		log.Fatal(err)
 	}
 }
 
-func (in *index) ServeHTTP(w http.ResponseWriter, r *http.Request) {
+func serveHTTP(w http.ResponseWriter, r *http.Request) {
 	err := r.ParseForm()
 	writer := bufio.NewWriter(w)
 	if err != nil {
@@ -44,6 +44,5 @@ func (in *index) ServeHTTP(w http.ResponseWriter, r *http.Request) {
 		r.Form,
 		r.Header,
 	}
-	fmt.Println(data)
-	in.tpl.Execute(w, data)
+	tpl.Execute(w, data)
 }
