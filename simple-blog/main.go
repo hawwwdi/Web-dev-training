@@ -4,8 +4,10 @@ import (
 	"fmt"
 	"github.com/julienschmidt/httprouter"
 	"html/template"
+	"io"
 	"log"
 	"net/http"
+	"strings"
 )
 
 var tpl *template.Template
@@ -31,20 +33,12 @@ func main() {
 
 func index(w http.ResponseWriter, _ *http.Request, _ httprouter.Params) {
 	err := tpl.ExecuteTemplate(w, "login.html", nil)
-	if err != nil {
-		fmt.Fprintln(w, err)
-		return
-	}
+	handleErr(w, err)
 }
 
 func login(w http.ResponseWriter, r *http.Request, _ httprouter.Params) {
 	err := r.ParseMultipartForm(64)
-	if err != nil {
-		log.Println(err)
-		fmt.Fprintln(w, err)
-		w.WriteHeader(http.StatusBadRequest)
-		return
-	}
+	handleErr(w, err)
 	user, pass := r.PostFormValue("user"), r.PostFormValue("pass")
 	fmt.Println("user: ", user, " pass: ", pass)
 	if user != USER || pass != PASS {
@@ -54,5 +48,12 @@ func login(w http.ResponseWriter, r *http.Request, _ httprouter.Params) {
 	data := struct {
 		User, Pass string
 	}{user, pass}
-	tpl.ExecuteTemplate(w, "panel.html", data)
+	err = tpl.ExecuteTemplate(w, "panel.html", data)
+	handleErr(w, err)
+}
+
+func handleErr(w io.Writer, err error){
+	if err != nil{
+		io.Copy(w, strings.NewReader(err.Error()))
+	}
 }

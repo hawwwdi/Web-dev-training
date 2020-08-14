@@ -20,12 +20,8 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="c0208362-83cd-4fd8-a4c7-1bb937f6910e" name="Default Changelist" comment="">
-      <change afterPath="$PROJECT_DIR$/simple-blog/go.mod" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/simple-blog/go.sum" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/simple-blog/main.go" beforeDir="false" afterPath="$PROJECT_DIR$/simple-blog/main.go" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/simple-blog/templates/index.html" beforeDir="false" afterPath="$PROJECT_DIR$/simple-blog/templates/panel.html" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/simple-blog/templates/login.html" beforeDir="false" afterPath="$PROJECT_DIR$/simple-blog/templates/login.html" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
