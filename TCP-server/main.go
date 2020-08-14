@@ -8,7 +8,7 @@ import (
 	"net"
 	"strings"
 
-	"github.com/hawwwdi/web-dev-training/tcp-serever/model"
+	"github.com/hawwwdi/web-dev-training/TCP-serever/model"
 )
 
 func main() {
