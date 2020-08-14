@@ -1,22 +1,26 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-	<title>Login page</title>
+    <title>Login page</title>
 </head>
 <body>
 {{if .}}
-<p><strong>invalid username or password!</strong></p><br>
+    <p><strong>invalid username or password!</strong></p><br>
 {{end}}
 <div class="wrapper">
-	<form target="/" method="post", enctype="multipart/form-data">
-		<h2>Login</h2>
-		<input type="text" name="user" placeholder="Email Address" required="" autofocus="" />
-		<input type="password" name="pass" placeholder="Password" required=""/>
-		<label>
-			<input type="checkbox" value="remember-me" id="rememberMe" name="rememberMe"> Remember me
-		</label>
-		<input type="submit" value="Login"></form>
-	</form>
+    <form action="/panel" method="post" enctype="multipart/form-data">
+        <fieldset>
+            <legend>Login</legend>
+            <label for="user">username</label><br>
+            <input type="text" name="user" id="user " placeholder="Email Address" required="" autofocus=""/><br>
+            <label for="pass">password</label><br>
+            <input type="password" name="pass" id="pass" placeholder="Password" required=""/>
+            <label>
+                <input type="checkbox" value="remember-me" id="rememberMe" name="rememberMe"> Remember me
+            </label><br>
+            <input type="submit" value="Login">
+        </fieldset>
+    </form>
 
 </div>
 </body>

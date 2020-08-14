@@ -1,7 +1,6 @@
 package main
 
 import (
-	"fmt"
 	"github.com/julienschmidt/httprouter"
 	"html/template"
 	"io"
@@ -12,10 +11,9 @@ import (
 
 var tpl *template.Template
 
-const (
-	USER = "admin"
-	PASS = "admin"
-)
+var USER = "admin"
+var PASS = "admin"
+
 
 func init() {
 	tpl = template.Must(template.ParseGlob("templates/*.html"))
@@ -24,8 +22,10 @@ func init() {
 func main() {
 	mux := httprouter.New()
 	mux.GET("/", index)
-	mux.POST("/", login)
-	err := http.ListenAndServe("localhost:8080", mux)
+	mux.POST("/panel", login)
+	mux.GET("/changePass", showChangePass)
+	mux.POST("/", changePassword)
+	err := http.ListenAndServe("localhost:8088", mux)
 	if err != nil {
 		log.Fatal(err)
 	}
@@ -40,9 +40,9 @@ func login(w http.ResponseWriter, r *http.Request, _ httprouter.Params) {
 	err := r.ParseMultipartForm(64)
 	handleErr(w, err)
 	user, pass := r.PostFormValue("user"), r.PostFormValue("pass")
-	fmt.Println("user: ", user, " pass: ", pass)
+	//fmt.Println("user: ", user, " pass: ", pass)
 	if user != USER || pass != PASS {
-		tpl.ExecuteTemplate(w, "login.html", true)
+		handleErr(w,tpl.ExecuteTemplate(w, "login.html", true))
 		return
 	}
 	data := struct {
@@ -50,6 +50,16 @@ func login(w http.ResponseWriter, r *http.Request, _ httprouter.Params) {
 	}{user, pass}
 	err = tpl.ExecuteTemplate(w, "panel.html", data)
 	handleErr(w, err)
+}
+
+func changePassword(w http.ResponseWriter, r *http.Request, _ httprouter.Params)  {
+	handleErr(w, r.ParseForm())
+	PASS = r.PostFormValue("pass")
+	handleErr(w, tpl.ExecuteTemplate(w, "login.html", nil))
+}
+
+func showChangePass(w http.ResponseWriter, _ *http.Request, _ httprouter.Params)  {
+	handleErr(w, tpl.ExecuteTemplate(w, "change.html", nil))
 }
 
 func handleErr(w io.Writer, err error){

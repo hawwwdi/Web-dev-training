@@ -6,8 +6,13 @@
 </head>
 <body>
     {{if .}}
-        <p>Welcome <strong>{{.User}}</strong></p><br>
-        <p>Your password: {{.Pass}}</p><br>
+        <h1>Welcome <strong>{{.User}}</strong></h1><br>
+            <h3>Panel</h3>
+            <ul>
+                <li><a href="/changePass">Change password</a></li>
+            </ul>
     {{end}}
+
+
 </body>
 </html>
