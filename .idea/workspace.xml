@@ -20,8 +20,10 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="c0208362-83cd-4fd8-a4c7-1bb937f6910e" name="Default Changelist" comment="">
+      <change afterPath="$PROJECT_DIR$/simple-blog/gopher.png" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/TCP-server/main.go" beforeDir="false" afterPath="$PROJECT_DIR$/TCP-server/main.go" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/simple-blog/main.go" beforeDir="false" afterPath="$PROJECT_DIR$/simple-blog/main.go" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/simple-blog/templates/panel.html" beforeDir="false" afterPath="$PROJECT_DIR$/simple-blog/templates/panel.html" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -58,8 +60,13 @@
     <property name="go.import.settings.migrated" value="true" />
     <property name="go.sdk.automatically.set" value="true" />
     <property name="go.tried.to.enable.integration.vgo.integrator" value="true" />
-    <property name="last_opened_file_path" value="$PROJECT_DIR$" />
+    <property name="last_opened_file_path" value="$PROJECT_DIR$/simple-blog" />
     <property name="list.type.of.created.stylesheet" value="CSS" />
+  </component>
+  <component name="RecentsManager">
+    <key name="CopyFile.RECENT_KEYS">
+      <recent name="$PROJECT_DIR$/simple-blog" />
+    </key>
   </component>
   <component name="SpellCheckerSettings" RuntimeDictionaries="0" Folders="0" CustomDictionaries="0" DefaultDictionary="application-level" UseSingleDictionary="true" transferred="true" />
   <component name="TypeScriptGeneratedFilesManager">
@@ -97,6 +104,10 @@
       <screen x="72" y="27" width="1294" height="741" />
     </state>
     <state x="448" y="128" width="747" height="540" key="StructurePopup/72.27.1294.741@72.27.1294.741" timestamp="1597405629097" />
+    <state x="457" y="79" width="514" height="644" key="com.intellij.openapi.editor.actions.MultiplePasteAction$ClipboardContentChooser" timestamp="1597494439762">
+      <screen x="72" y="27" width="1294" height="741" />
+    </state>
+    <state x="457" y="79" width="514" height="644" key="com.intellij.openapi.editor.actions.MultiplePasteAction$ClipboardContentChooser/72.27.1294.741@72.27.1294.741" timestamp="1597494439762" />
     <state x="382" y="89" width="672" height="678" key="search.everywhere.popup" timestamp="1597381769144">
       <screen x="72" y="27" width="1294" height="741" />
     </state>

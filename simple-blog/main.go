@@ -1,11 +1,13 @@
 package main
 
 import (
+	"fmt"
 	"github.com/julienschmidt/httprouter"
 	"html/template"
 	"io"
 	"log"
 	"net/http"
+	"os"
 	"strings"
 )
 
@@ -13,7 +15,6 @@ var tpl *template.Template
 
 var USER = "admin"
 var PASS = "admin"
-
 
 func init() {
 	tpl = template.Must(template.ParseGlob("templates/*.html"))
@@ -25,6 +26,7 @@ func main() {
 	mux.POST("/panel", login)
 	mux.GET("/changePass", showChangePass)
 	mux.POST("/", changePassword)
+	mux.GET("/show/:pic", show)
 	err := http.ListenAndServe("localhost:8088", mux)
 	if err != nil {
 		log.Fatal(err)
@@ -42,7 +44,7 @@ func login(w http.ResponseWriter, r *http.Request, _ httprouter.Params) {
 	user, pass := r.PostFormValue("user"), r.PostFormValue("pass")
 	//fmt.Println("user: ", user, " pass: ", pass)
 	if user != USER || pass != PASS {
-		handleErr(w,tpl.ExecuteTemplate(w, "login.html", true))
+		handleErr(w, tpl.ExecuteTemplate(w, "login.html", true))
 		return
 	}
 	data := struct {
@@ -52,18 +54,31 @@ func login(w http.ResponseWriter, r *http.Request, _ httprouter.Params) {
 	handleErr(w, err)
 }
 
-func changePassword(w http.ResponseWriter, r *http.Request, _ httprouter.Params)  {
+func changePassword(w http.ResponseWriter, r *http.Request, _ httprouter.Params) {
 	handleErr(w, r.ParseForm())
 	PASS = r.PostFormValue("pass")
 	handleErr(w, tpl.ExecuteTemplate(w, "login.html", nil))
 }
 
-func showChangePass(w http.ResponseWriter, _ *http.Request, _ httprouter.Params)  {
+func showChangePass(w http.ResponseWriter, _ *http.Request, _ httprouter.Params) {
 	handleErr(w, tpl.ExecuteTemplate(w, "change.html", nil))
 }
 
-func handleErr(w io.Writer, err error){
-	if err != nil{
+func show(w http.ResponseWriter, _ *http.Request, sp httprouter.Params) {
+	picName := sp.ByName("pic")
+	pic, err := os.Open(picName)
+	if err != nil {
+		w.WriteHeader(http.StatusNotFound)
+		fmt.Fprintf(w, "image %v not found !", picName)
+		return
+	}
+	_, exception := io.Copy(w, pic)
+	handleErr(w, exception)
+
+}
+
+func handleErr(w io.Writer, err error) {
+	if err != nil {
 		io.Copy(w, strings.NewReader(err.Error()))
 	}
 }
