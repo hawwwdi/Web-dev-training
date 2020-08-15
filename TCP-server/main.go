@@ -8,7 +8,7 @@ import (
 	"net"
 	"strings"
 
-	"github.com/hawwwdi/web-dev-training/TCP-serever/model"
+	"github.com/hawwwdi/web-dev-training/TCP-server/model"
 )
 
 func main() {
@@ -17,7 +17,7 @@ func main() {
 		log.Fatal(err)
 	}
 	for i := 1; true; i++ {
-		fmt.Println("wating for client ", i)
+		fmt.Println("waiting for client ", i)
 		client, err := server.Accept()
 		fmt.Println("client ", i, " accepted")
 		if err != nil {
