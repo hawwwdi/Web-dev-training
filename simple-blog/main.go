@@ -7,7 +7,6 @@ import (
 	"io"
 	"log"
 	"net/http"
-	"os"
 	"strings"
 )
 
@@ -21,13 +20,15 @@ func init() {
 }
 
 func main() {
+	fmt.Println("run 1")
 	mux := httprouter.New()
 	mux.GET("/", index)
 	mux.POST("/panel", login)
 	mux.GET("/changePass", showChangePass)
 	mux.POST("/", changePassword)
 	mux.GET("/show/:pic", show)
-	err := http.ListenAndServe("localhost:8088", mux)
+	mux.Handler("GET", "/files/",http.StripPrefix("/files", http.FileServer(http.Dir("./"))))
+	err := http.ListenAndServe("localhost:8089", mux)
 	if err != nil {
 		log.Fatal(err)
 	}
@@ -64,17 +65,18 @@ func showChangePass(w http.ResponseWriter, _ *http.Request, _ httprouter.Params)
 	handleErr(w, tpl.ExecuteTemplate(w, "change.html", nil))
 }
 
-func show(w http.ResponseWriter, _ *http.Request, sp httprouter.Params) {
+func show(w http.ResponseWriter, r *http.Request, sp httprouter.Params) {
 	picName := sp.ByName("pic")
-	pic, err := os.Open(picName)
-	if err != nil {
+	//pic, err := os.Open(picName)
+	/*if err != nil {
 		w.WriteHeader(http.StatusNotFound)
 		fmt.Fprintf(w, "image %v not found !", picName)
 		return
 	}
-	_, exception := io.Copy(w, pic)
-	handleErr(w, exception)
-
+	defer pic.Close()*/
+	//details , exception := pic.Stat()
+	//handleErr(w, exception)
+	http.ServeFile(w, r, picName)
 }
 
 func handleErr(w io.Writer, err error) {

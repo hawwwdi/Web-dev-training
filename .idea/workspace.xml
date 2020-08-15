@@ -20,7 +20,6 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="c0208362-83cd-4fd8-a4c7-1bb937f6910e" name="Default Changelist" comment="">
-      <change afterPath="$PROJECT_DIR$/simple-blog/gopher.png" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/simple-blog/main.go" beforeDir="false" afterPath="$PROJECT_DIR$/simple-blog/main.go" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/simple-blog/templates/panel.html" beforeDir="false" afterPath="$PROJECT_DIR$/simple-blog/templates/panel.html" afterDir="false" />
@@ -33,9 +32,9 @@
   <component name="FileTemplateManagerImpl">
     <option name="RECENT_TEMPLATES">
       <list>
-        <option value="Go Application" />
         <option value="CSS File" />
         <option value="HTML File" />
+        <option value="Go Application" />
       </list>
     </option>
   </component>
@@ -104,10 +103,10 @@
       <screen x="72" y="27" width="1294" height="741" />
     </state>
     <state x="448" y="128" width="747" height="540" key="StructurePopup/72.27.1294.741@72.27.1294.741" timestamp="1597405629097" />
-    <state x="457" y="79" width="514" height="644" key="com.intellij.openapi.editor.actions.MultiplePasteAction$ClipboardContentChooser" timestamp="1597494439762">
+    <state x="457" y="79" width="514" height="644" key="com.intellij.openapi.editor.actions.MultiplePasteAction$ClipboardContentChooser" timestamp="1597501536904">
       <screen x="72" y="27" width="1294" height="741" />
     </state>
-    <state x="457" y="79" width="514" height="644" key="com.intellij.openapi.editor.actions.MultiplePasteAction$ClipboardContentChooser/72.27.1294.741@72.27.1294.741" timestamp="1597494439762" />
+    <state x="457" y="79" width="514" height="644" key="com.intellij.openapi.editor.actions.MultiplePasteAction$ClipboardContentChooser/72.27.1294.741@72.27.1294.741" timestamp="1597501536904" />
     <state x="382" y="89" width="672" height="678" key="search.everywhere.popup" timestamp="1597381769144">
       <screen x="72" y="27" width="1294" height="741" />
     </state>
