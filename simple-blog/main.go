@@ -23,6 +23,7 @@ func main() {
 	fmt.Println("run 1")
 	mux := httprouter.New()
 	mux.Handler("GET", "/", http.FileServer(http.Dir("./templates")))
+	mux.Handler("GET", "/favicon.ico", http.FileServer(http.Dir("")))
 	mux.POST("/panel", login)
 	mux.GET("/changePass", showChangePass)
 	mux.POST("/", changePassword)
