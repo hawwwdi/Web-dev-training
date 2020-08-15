@@ -22,7 +22,7 @@ func init() {
 func main() {
 	fmt.Println("run 1")
 	mux := httprouter.New()
-	mux.GET("/", index)
+	mux.Handler("GET", "/", http.FileServer(http.Dir("./templates")))
 	mux.POST("/panel", login)
 	mux.GET("/changePass", showChangePass)
 	mux.POST("/", changePassword)
@@ -35,7 +35,7 @@ func main() {
 }
 
 func index(w http.ResponseWriter, _ *http.Request, _ httprouter.Params) {
-	err := tpl.ExecuteTemplate(w, "login.html", nil)
+	err := tpl.ExecuteTemplate(w, "index.html", nil)
 	handleErr(w, err)
 }
 
@@ -45,7 +45,7 @@ func login(w http.ResponseWriter, r *http.Request, _ httprouter.Params) {
 	user, pass := r.PostFormValue("user"), r.PostFormValue("pass")
 	//fmt.Println("user: ", user, " pass: ", pass)
 	if user != USER || pass != PASS {
-		handleErr(w, tpl.ExecuteTemplate(w, "login.html", true))
+		handleErr(w, tpl.ExecuteTemplate(w, "index.html", true))
 		return
 	}
 	data := struct {
@@ -58,7 +58,7 @@ func login(w http.ResponseWriter, r *http.Request, _ httprouter.Params) {
 func changePassword(w http.ResponseWriter, r *http.Request, _ httprouter.Params) {
 	handleErr(w, r.ParseForm())
 	PASS = r.PostFormValue("pass")
-	handleErr(w, tpl.ExecuteTemplate(w, "login.html", nil))
+	handleErr(w, tpl.ExecuteTemplate(w, "index.html", nil))
 }
 
 func showChangePass(w http.ResponseWriter, _ *http.Request, _ httprouter.Params) {

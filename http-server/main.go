@@ -12,7 +12,7 @@ import (
 var tpl *template.Template
 
 func init() {
-	tpl = template.Must(template.ParseFiles("templates/login.html"))
+	tpl = template.Must(template.ParseFiles("templates/index.html"))
 }
 
 func main() {
