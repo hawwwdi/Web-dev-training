@@ -90,7 +90,7 @@ func showPic(w http.ResponseWriter, r *http.Request, _ httprouter.Params)  {
 	defer file.Close()
 	bytes, err1 := ioutil.ReadAll(file)
 	handleErr(w, err1)
-	toSave, err2 := os.Create(filepath.Join("./files/", details.filename))
+	toSave, err2 := os.Create(filepath.Join("./files/", details.Filename))
 	defer toSave.Close()
 	handleErr(w, err2)
 	toSave.Write(bytes)
