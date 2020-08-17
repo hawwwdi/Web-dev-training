@@ -8,6 +8,8 @@ import (
 	"io/ioutil"
 	"log"
 	"net/http"
+	"os"
+	"path/filepath"
 	"strings"
 )
 
@@ -83,16 +85,23 @@ func show(w http.ResponseWriter, r *http.Request, sp httprouter.Params) {
 }
 
 func showPic(w http.ResponseWriter, r *http.Request, _ httprouter.Params)  {
-	file, _, err := r.FormFile("file")
+	file, details, err := r.FormFile("file")
 	handleErr(w, err)
+	defer file.Close()
 	bytes, err1 := ioutil.ReadAll(file)
 	handleErr(w, err1)
+	toSave, err2 := os.Create(filepath.Join("./files/", details.filename))
+	defer toSave.Close()
+	handleErr(w, err2)
+	toSave.Write(bytes)
 	err = tpl.ExecuteTemplate(w, "show.html", string(bytes))
 	handleErr(w, err)
 }
 
 func handleErr(w io.Writer, err error) {
 	if err != nil {
-		io.Copy(w, strings.NewReader(err.Error()))
+		if _, err1 := io.Copy(w, strings.NewReader(err.Error())); err1 != nil{
+			log.Fatalln(err1)
+		}
 	}
 }
