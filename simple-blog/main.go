@@ -5,6 +5,7 @@ import (
 	"github.com/julienschmidt/httprouter"
 	"html/template"
 	"io"
+	"io/ioutil"
 	"log"
 	"net/http"
 	"strings"
@@ -28,6 +29,7 @@ func main() {
 	mux.GET("/changePass", showChangePass)
 	mux.POST("/", changePassword)
 	mux.GET("/show/:pic", show)
+	mux.POST("/show", showPic)
 	mux.Handler("GET", "/files/",http.StripPrefix("/files", http.FileServer(http.Dir("./"))))
 	err := http.ListenAndServe("localhost:8089", mux)
 	if err != nil {
@@ -78,6 +80,15 @@ func show(w http.ResponseWriter, r *http.Request, sp httprouter.Params) {
 	//details , exception := pic.Stat()
 	//handleErr(w, exception)
 	http.ServeFile(w, r, picName)
+}
+
+func showPic(w http.ResponseWriter, r *http.Request, _ httprouter.Params)  {
+	file, _, err := r.FormFile("file")
+	handleErr(w, err)
+	bytes, err1 := ioutil.ReadAll(file)
+	handleErr(w, err1)
+	err = tpl.ExecuteTemplate(w, "show.html", string(bytes))
+	handleErr(w, err)
 }
 
 func handleErr(w io.Writer, err error) {

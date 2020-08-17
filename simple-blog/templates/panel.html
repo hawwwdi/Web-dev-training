@@ -13,6 +13,11 @@
                 <li><a href="/show/gopher.png">Show gopher</a></li>
                 <li><a href="/files/">Files</a></li>
             </ul>
+            <form method="post" action="/show" target="_blank" enctype="multipart/form-data">
+                <label for="file">upload a file</label>
+                <input type="file" id="file" name="file">
+                <input type="submit" value="upload">
+            </form>
     {{end}}
 
 
