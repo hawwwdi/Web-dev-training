@@ -26,15 +26,15 @@ func main() {
 	}
 }
 
-func redirect(w http.ResponseWriter, _ *http.Request){
-	fmt.Println("redirect to get")
+func redirect(w http.ResponseWriter, r *http.Request){
+	fmt.Println("redirect to /hello & method = ", r.Method)
 	w.Header().Add("location", "/hello")
 	w.WriteHeader(http.StatusSeeOther)
 	return
 }
 
-func sayHello(w http.ResponseWriter, _ *http.Request) {
-	fmt.Println("GET")
+func sayHello(w http.ResponseWriter, r *http.Request) {
+	fmt.Println(r.Method)
 	fmt.Fprintln(w, "hello world :|")
 }
 
