@@ -32,7 +32,8 @@ func main() {
 	mux.POST("/", changePassword)
 	mux.GET("/show/:pic", show)
 	mux.POST("/show", showPic)
-	mux.Handler("GET", "/files/",http.StripPrefix("/files", http.FileServer(http.Dir("./"))))
+	//mux.Handler("GET", "/files/",http.StripPrefix("/files", http.FileServer(http.Dir("./"))))
+	mux.ServeFiles("/files/*filepath", http.Dir("./"))
 	err := http.ListenAndServe("localhost:8089", mux)
 	if err != nil {
 		log.Fatal(err)
