@@ -19,19 +19,20 @@ func main() {
 	mux := http.NewServeMux()
 	mux.HandleFunc("/", serveHTTP)
 	mux.HandleFunc("/hello/", sayHello)
-	mux.HandleFunc("/redirect", redirect)
+	//mux.HandleFunc("/redirect", redirect)
+	mux.Handle("/redirect", http.RedirectHandler("/hello/", http.StatusSeeOther))
 	err := http.ListenAndServe(":8080", mux)
 	if err != nil {
 		log.Fatal(err)
 	}
 }
 
-func redirect(w http.ResponseWriter, r *http.Request){
+/*func redirect(w http.ResponseWriter, r *http.Request){
 	fmt.Println("redirect to /hello & method = ", r.Method)
 	w.Header().Add("location", "/hello")
 	w.WriteHeader(http.StatusSeeOther)
 	return
-}
+}*/
 
 func sayHello(w http.ResponseWriter, r *http.Request) {
 	fmt.Println(r.Method)
