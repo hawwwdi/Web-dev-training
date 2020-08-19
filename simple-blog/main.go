@@ -11,6 +11,7 @@ import (
 	"os"
 	"path/filepath"
 	"strings"
+	"time"
 )
 
 var tpl *template.Template
@@ -54,9 +55,20 @@ func login(w http.ResponseWriter, r *http.Request, _ httprouter.Params) {
 		handleErr(w, tpl.ExecuteTemplate(w, "index.html", true))
 		return
 	}
+	http.SetCookie(w, &http.Cookie{
+		Name: "last-seen",
+		Value: time.Now().Format("15:04:05"),
+	})
+	var lastseen string
+	lastSeen, _:= r.Cookie("last-seen")
+	if lastSeen != nil{
+		lastseen = lastSeen.Value
+	} else {
+		lastseen = "Now"
+	}
 	data := struct {
-		User, Pass string
-	}{user, pass}
+		User, Pass, LastSeen string
+	}{user, pass, lastseen}
 	err = tpl.ExecuteTemplate(w, "panel.html", data)
 	handleErr(w, err)
 }
