@@ -29,7 +29,6 @@ func main() {
 
 func redirect(w http.ResponseWriter, r *http.Request){
 	fmt.Println("redirect to /hello & method = ", r.Method)
-
 	w.Header().Set("Location", "/hello/")
 	//w.Header().Set("Content-Type", "text/html; charset=utf-8")
 	//w.Write([]byte("Location: /hello"))
@@ -38,8 +37,15 @@ func redirect(w http.ResponseWriter, r *http.Request){
 }
 
 func sayHello(w http.ResponseWriter, r *http.Request) {
+	cookie := http.Cookie{
+		Name: "say",
+		Value: "hello",
+	}
+	http.SetCookie(w, &cookie)
+	fmt.Println("this is domain: ", cookie.Domain)
 	fmt.Println(r.Method)
 	fmt.Fprintln(w, "hello world :|")
+	fmt.Fprintln(w, r.Cookies())
 }
 
 func serveHTTP(w http.ResponseWriter, r *http.Request) {
@@ -47,6 +53,11 @@ func serveHTTP(w http.ResponseWriter, r *http.Request) {
 		http.NotFound(w, r)
 		return
 	}
+	cookie := http.Cookie{
+		Name: "wolf",
+		Value: "hehehe",
+	}
+	http.SetCookie(w, &cookie)
 	err := r.ParseForm()
 	writer := bufio.NewWriter(w)
 	if err != nil {
