@@ -2,6 +2,7 @@ package main
 
 import (
 	"fmt"
+	"github.com/gofrs/uuid"
 	"net/http"
 )
 
@@ -28,9 +29,14 @@ func set(w http.ResponseWriter, req *http.Request) {
 	c := &http.Cookie{
 		Name:  "my-cookie",
 		Value: "some value",
-		Path:  "/some",
+	//	Path:  "/some",
+	}
+	id := &http.Cookie{
+		Name: "UUID",
+		Value: uuid.Must(uuid.NewV4()).String(),
 	}
 	http.SetCookie(w, c)
+	http.SetCookie(w, id)
 	fmt.Println(c)
 	fmt.Fprintln(w, "YOUR COOKIE:", c)
 	fmt.Fprintln(w, "COOKIE WRITTEN - CHECK YOUR BROWSER")
