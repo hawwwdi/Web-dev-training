@@ -35,11 +35,6 @@ func init() {
 		Password: "admin",
 		IsAdmin:  true,
 	}
-	usersMap["hawwwdi"] = User{
-		Id:       "hawwwdi",
-		Password: "123",
-		IsAdmin:  false,
-	}
 	tpl = template.Must(template.ParseGlob("templates/*.html"))
 }
 
@@ -57,6 +52,8 @@ func main() {
 	mux.POST("/show", showPic)
 	//mux.Handler("GET", "/files/",http.StripPrefix("/files", http.FileServer(http.Dir("./"))))
 	mux.ServeFiles("/files/*filepath", http.Dir("./"))
+	mux.GET("/newUser", showAddUser)
+	mux.POST("/addUser", addUser)
 	err := http.ListenAndServe("localhost:8080", mux)
 	handleErr(os.Stdout, err)
 }
@@ -107,6 +104,10 @@ func login(w http.ResponseWriter, user *User) {
 		http.SetCookie(w, &http.Cookie{
 			Name:  "last-seen",
 			Value: time.Now().Format("15:04:05"),
+		})
+		http.SetCookie(w, &http.Cookie{
+			Name:  "admin",
+			Value: "true",
 		})
 		data := struct {
 			User, Pass, LastSeen string
@@ -176,6 +177,31 @@ func showPic(w http.ResponseWriter, r *http.Request, _ httprouter.Params) {
 	_, err3 := toSave.Write(bytes)
 	handleErr(w, err3)
 	err = tpl.ExecuteTemplate(w, "show.html", string(bytes))
+	handleErr(w, err)
+}
+
+func addUser(w http.ResponseWriter, r *http.Request, _ httprouter.Params) {
+	if _, err := r.Cookie("admin"); err != nil {
+		http.Redirect(w, r, "/", http.StatusSeeOther)
+		return
+	}
+	r.ParseForm()
+	username, pass := r.PostFormValue("id"), r.PostFormValue("pass")
+	usersMap[username] = User{
+		Id:       username,
+		Password: pass,
+		IsAdmin:  false,
+	}
+	http.SetCookie(w, &http.Cookie{
+		Name:   "admin",
+		MaxAge: -1,
+	})
+	http.Redirect(w, r, "/", http.StatusSeeOther)
+	return
+}
+
+func showAddUser(w http.ResponseWriter, _ *http.Request, _ httprouter.Params) {
+	err := tpl.ExecuteTemplate(w, "addUser.html", nil)
 	handleErr(w, err)
 }
 

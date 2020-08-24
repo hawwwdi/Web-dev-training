@@ -1,0 +1,23 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>change password</title>
+</head>
+<body>
+<h1>change password</h1>
+<form method="post" action="/addUser">
+    <label for="id">Id</label>
+    <input type="text" id="id" name="id" required><br>
+    <label for="pass">Pass</label>
+    <input type="text" id="pass" name="pass" required><br>
+    <input type="submit" value="add" onclick="alertpass()">
+</form>
+<script>
+    function alertpass() {
+        alert("user added!");
+    }
+</script>
+
+</body>
+</html>
