@@ -2,13 +2,11 @@ package main
 
 import (
 	"fmt"
-	"github.com/gofrs/uuid"
 	"net/http"
 )
 
 func main() {
 	http.HandleFunc("/", index)
-	http.HandleFunc("/some", index)
 	http.HandleFunc("/users/goofy", set)
 	http.HandleFunc("/users/goofy/read", read)
 	http.Handle("/favicon.ico", http.NotFoundHandler())
@@ -25,18 +23,12 @@ func index(w http.ResponseWriter, req *http.Request) {
 	fmt.Fprintln(w, "YOUR COOKIE:", c)
 }
 
-func set(w http.ResponseWriter, req *http.Request) {
+func set(w http.ResponseWriter, _ *http.Request) {
 	c := &http.Cookie{
 		Name:  "my-cookie",
 		Value: "some value",
-	//	Path:  "/some",
-	}
-	id := &http.Cookie{
-		Name: "UUID",
-		Value: uuid.Must(uuid.NewV4()).String(),
 	}
 	http.SetCookie(w, c)
-	http.SetCookie(w, id)
 	fmt.Println(c)
 	fmt.Fprintln(w, "YOUR COOKIE:", c)
 	fmt.Fprintln(w, "COOKIE WRITTEN - CHECK YOUR BROWSER")

@@ -4,9 +4,9 @@
     <title>Login page</title>
 </head>
 <body>
-<!--{{if .}}
-    <p><strong>invalid username or password!</strong></p><br>
-{{end}}-->
+{{if .}}
+    <p><strong>{{.}}</strong></p><br>
+{{end}}
 <div class="wrapper">
     <form action="/panel" method="post" enctype="multipart/form-data">
         <fieldset>
@@ -16,7 +16,7 @@
             <label for="pass">password</label><br>
             <input type="password" name="pass" id="pass" placeholder="Password" required=""/>
             <label>
-                <input type="checkbox" value="remember-me" id="rememberMe" name="rememberMe"> Remember me
+                <input type="checkbox" value="true" id="rememberMe" name="rememberMe"> Remember me
             </label><br>
             <input type="submit" value="Login">
         </fieldset>
