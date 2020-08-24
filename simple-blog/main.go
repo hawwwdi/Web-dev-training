@@ -44,20 +44,20 @@ func main() {
 	//mux.Handler("GET", "/", http.FileServer(http.Dir("./templates")))
 	mux.GET("/", index)
 	mux.Handler("GET", "/favicon.ico", http.FileServer(http.Dir("")))
-	mux.POST("/panel", login)
+	mux.POST("/panel", postLogin)
+	mux.GET("/panel", cookieLogin)
 	mux.GET("/changePass", showChangePass)
-//	mux.POST("/", changePassword)
+	//	mux.POST("/", changePassword)
 	mux.GET("/show/:pic", show)
 	mux.POST("/show", showPic)
 	//mux.Handler("GET", "/files/",http.StripPrefix("/files", http.FileServer(http.Dir("./"))))
 	mux.ServeFiles("/files/*filepath", http.Dir("./"))
-	err := http.ListenAndServe("localhost:8089", mux)
+	err := http.ListenAndServe("localhost:8080", mux)
 	handleErr(os.Stdout, err)
 }
 
 func index(w http.ResponseWriter, r *http.Request, _ httprouter.Params) {
-	_, err := r.Cookie("session")
-	if err != nil{
+	if _, err := r.Cookie("session"); err == nil {
 		http.Redirect(w, r, "/panel", http.StatusSeeOther)
 		return
 	}
@@ -65,7 +65,19 @@ func index(w http.ResponseWriter, r *http.Request, _ httprouter.Params) {
 	handleErr(w, err1)
 }
 
-func login(w http.ResponseWriter, r *http.Request, _ httprouter.Params) {
+func cookieLogin(w http.ResponseWriter, r *http.Request, _ httprouter.Params) {
+	cookie, _ := r.Cookie("session")
+	UUID := cookie.Value
+	username, exists := sessionsMap[UUID]
+	if !exists {
+		fmt.Fprintln(w, "invalid cookie!")
+		return
+	}
+	user := usersMap[username]
+	login(w, &user)
+}
+
+func postLogin(w http.ResponseWriter, r *http.Request, _ httprouter.Params) {
 	err := r.ParseMultipartForm(64)
 	handleErr(w, err)
 	username, pass, rememberMe := r.PostFormValue("user"), r.PostFormValue("pass"), r.PostFormValue("rememberMe")
@@ -82,25 +94,23 @@ func login(w http.ResponseWriter, r *http.Request, _ httprouter.Params) {
 		handleErr(w, tpl.ExecuteTemplate(w, "index.html", true))
 		return
 	}*/
+	login(w, user)
+}
+
+func login(w http.ResponseWriter, user *User) {
 	if user.IsAdmin {
 		http.SetCookie(w, &http.Cookie{
 			Name:  "last-seen",
 			Value: time.Now().Format("15:04:05"),
 		})
-		var lastseen string
-		lastSeen, _ := r.Cookie("last-seen")
-		if lastSeen != nil {
-			lastseen = lastSeen.Value
-		} else {
-			lastseen = "Now"
-		}
 		data := struct {
 			User, Pass, LastSeen string
-		}{username, pass, lastseen}
-		err = tpl.ExecuteTemplate(w, "panel.html", data)
+		}{user.Id, user.Password, "Now"}
+		err := tpl.ExecuteTemplate(w, "panel.html", data)
 		handleErr(w, err)
 	} else {
-		fmt.Fprintf(w, "welcome %v", username)
+		_, err := fmt.Fprintf(w, "welcome %v", user.Id)
+		handleErr(w, err)
 	}
 }
 
