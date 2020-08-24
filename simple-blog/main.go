@@ -35,6 +35,11 @@ func init() {
 		Password: "admin",
 		IsAdmin:  true,
 	}
+	usersMap["hawwwdi"] = User{
+		Id:       "hawwwdi",
+		Password: "123",
+		IsAdmin:  false,
+	}
 	tpl = template.Must(template.ParseGlob("templates/*.html"))
 }
 
