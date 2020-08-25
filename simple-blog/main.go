@@ -1,7 +1,6 @@
 package main
 
 import (
-	"errors"
 	"fmt"
 	"github.com/gofrs/uuid"
 	"github.com/julienschmidt/httprouter"
@@ -59,7 +58,7 @@ func main() {
 }
 
 func index(w http.ResponseWriter, r *http.Request, _ httprouter.Params) {
-	if _, err := r.Cookie("session"); err == nil {
+	if alreadySignedIn(r) {
 		http.Redirect(w, r, "/panel", http.StatusSeeOther)
 		return
 	}
@@ -68,34 +67,22 @@ func index(w http.ResponseWriter, r *http.Request, _ httprouter.Params) {
 }
 
 func cookieLogin(w http.ResponseWriter, r *http.Request, _ httprouter.Params) {
-	cookie, _ := r.Cookie("session")
-	UUID := cookie.Value
-	username, exists := sessionsMap[UUID]
-	if !exists {
-		fmt.Fprintln(w, "invalid cookie!")
-		return
-	}
-	user := usersMap[username]
-	login(w, &user)
+	user := getUser(r)
+	login(w, user)
 }
 
 func postLogin(w http.ResponseWriter, r *http.Request, _ httprouter.Params) {
 	err := r.ParseMultipartForm(64)
 	handleErr(w, err)
 	username, pass, rememberMe := r.PostFormValue("user"), r.PostFormValue("pass"), r.PostFormValue("rememberMe")
-	//fmt.Println("user: ", user, " pass: ", pass)
-	user, err2 := getUser(username, pass)
+	user, err2 := checkUser(username, pass)
 	if err2 != nil {
 		http.Redirect(w, r, "/", http.StatusSeeOther)
 		return
 	}
-	if rememberMe == "true" {
+	if rememberMe == "true" && !alreadySignedIn(r) {
 		writeSession(w, username)
 	}
-	/*if user != USER || pass != PASS {
-		handleErr(w, tpl.ExecuteTemplate(w, "index.html", true))
-		return
-	}*/
 	login(w, user)
 }
 
@@ -120,27 +107,6 @@ func login(w http.ResponseWriter, user *User) {
 	}
 }
 
-func writeSession(w http.ResponseWriter, id string) {
-	userUUID := uuid.Must(uuid.NewV4())
-	sessionsMap[userUUID.String()] = id
-	cookie := http.Cookie{
-		Name:  "session",
-		Value: userUUID.String(),
-	}
-	http.SetCookie(w, &cookie)
-}
-
-func getUser(username, pass string) (*User, error) {
-	user, err := usersMap[username]
-	if !err {
-		return nil, errors.New("invalid username")
-	}
-	if user.Password != pass {
-		return nil, errors.New("invalid password")
-	}
-	return &user, nil
-}
-
 /*func changePassword(w http.ResponseWriter, r *http.Request, _ httprouter.Params) {
 	handleErr(w, r.ParseForm())
 	PASS = r.PostFormValue("pass")
@@ -153,15 +119,6 @@ func showChangePass(w http.ResponseWriter, _ *http.Request, _ httprouter.Params)
 
 func show(w http.ResponseWriter, r *http.Request, sp httprouter.Params) {
 	picName := sp.ByName("pic")
-	//pic, err := os.Open(picName)
-	/*if err != nil {
-		w.WriteHeader(http.StatusNotFound)
-		fmt.Fprintf(w, "image %v not found !", picName)
-		return
-	}
-	defer pic.Close()*/
-	//details , exception := pic.Stat()
-	//handleErr(w, exception)
 	http.ServeFile(w, r, picName)
 }
 
@@ -192,7 +149,7 @@ func addUser(w http.ResponseWriter, r *http.Request, _ httprouter.Params) {
 		Password: pass,
 		IsAdmin:  false,
 	}
-	http.SetCookie(w, &http.Cookie{
+	http.SetCookie(w, &http.Cookie {
 		Name:   "admin",
 		MaxAge: -1,
 	})
@@ -204,6 +161,8 @@ func showAddUser(w http.ResponseWriter, _ *http.Request, _ httprouter.Params) {
 	err := tpl.ExecuteTemplate(w, "addUser.html", nil)
 	handleErr(w, err)
 }
+
+
 
 func handleErr(w io.Writer, err error) {
 	if err != nil {
