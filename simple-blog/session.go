@@ -3,6 +3,7 @@ package main
 import (
 	"errors"
 	"github.com/gofrs/uuid"
+	"golang.org/x/crypto/bcrypt"
 	"net/http"
 )
 
@@ -20,7 +21,7 @@ func checkUser(username, pass string) (*User, error) {
 	if !err {
 		return nil, errors.New("invalid username")
 	}
-	if user.Password != pass {
+	if bcrypt.CompareHashAndPassword(user.Password, []byte(pass)) != nil {
 		return nil, errors.New("invalid password")
 	}
 	return &user, nil

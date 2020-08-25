@@ -2,8 +2,8 @@ package main
 
 import (
 	"fmt"
-	"github.com/gofrs/uuid"
 	"github.com/julienschmidt/httprouter"
+	"golang.org/x/crypto/bcrypt"
 	"html/template"
 	"io"
 	"io/ioutil"
@@ -20,20 +20,15 @@ var sessionsMap map[string]string
 var usersMap map[string]User
 
 type User struct {
-	Id, Password string
+	Id string
+	Password []byte
 	IsAdmin      bool
 }
 
 func init() {
 	sessionsMap = make(map[string]string)
 	usersMap = make(map[string]User)
-	adminUUID := uuid.Must(uuid.NewV4())
-	sessionsMap[adminUUID.String()] = "admin"
-	usersMap["admin"] = User{
-		Id:       "admin",
-		Password: "admin",
-		IsAdmin:  true,
-	}
+	addNewUser("admin", "admin", true)
 	tpl = template.Must(template.ParseGlob("templates/*.html"))
 }
 
@@ -98,7 +93,7 @@ func login(w http.ResponseWriter, user *User) {
 		})
 		data := struct {
 			User, Pass, LastSeen string
-		}{user.Id, user.Password, "Now"}
+		}{user.Id, string(user.Password), "Now"}
 		err := tpl.ExecuteTemplate(w, "panel.html", data)
 		handleErr(w, err)
 	} else {
@@ -144,17 +139,23 @@ func addUser(w http.ResponseWriter, r *http.Request, _ httprouter.Params) {
 	}
 	r.ParseForm()
 	username, pass := r.PostFormValue("id"), r.PostFormValue("pass")
-	usersMap[username] = User{
-		Id:       username,
-		Password: pass,
-		IsAdmin:  false,
-	}
+	addNewUser(username, pass, false)
 	http.SetCookie(w, &http.Cookie {
 		Name:   "admin",
 		MaxAge: -1,
 	})
 	http.Redirect(w, r, "/", http.StatusSeeOther)
 	return
+}
+
+func addNewUser(username, pass string, isAdmin bool) {
+	encryptedPass, err := bcrypt.GenerateFromPassword([]byte(pass), bcrypt.MinCost)
+	handleErr(os.Stdout, err)
+	usersMap[username] = User{
+		Id:       username,
+		Password: encryptedPass,
+		IsAdmin:  isAdmin,
+	}
 }
 
 func showAddUser(w http.ResponseWriter, _ *http.Request, _ httprouter.Params) {
