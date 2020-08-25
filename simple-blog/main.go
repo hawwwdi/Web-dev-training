@@ -7,7 +7,6 @@ import (
 	"html/template"
 	"io"
 	"io/ioutil"
-	"log"
 	"net/http"
 	"os"
 	"path/filepath"
@@ -20,9 +19,9 @@ var sessionsMap map[string]string
 var usersMap map[string]User
 
 type User struct {
-	Id string
+	Id       string
 	Password []byte
-	IsAdmin      bool
+	IsAdmin  bool
 }
 
 func init() {
@@ -140,7 +139,7 @@ func addUser(w http.ResponseWriter, r *http.Request, _ httprouter.Params) {
 	r.ParseForm()
 	username, pass := r.PostFormValue("id"), r.PostFormValue("pass")
 	addNewUser(username, pass, false)
-	http.SetCookie(w, &http.Cookie {
+	http.SetCookie(w, &http.Cookie{
 		Name:   "admin",
 		MaxAge: -1,
 	})
@@ -163,12 +162,13 @@ func showAddUser(w http.ResponseWriter, _ *http.Request, _ httprouter.Params) {
 	handleErr(w, err)
 }
 
-
-
 func handleErr(w io.Writer, err error) {
 	if err != nil {
-		if _, err1 := io.Copy(w, strings.NewReader(err.Error())); err1 != nil {
-			log.Fatalln(err1)
+		switch v := w.(type) {
+		case http.ResponseWriter:
+			http.Error(v, err.Error(), http.StatusInternalServerError)
+		case *os.File:
+			io.Copy(v, strings.NewReader(err.Error()))
 		}
 	}
 }
