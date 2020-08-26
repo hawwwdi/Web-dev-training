@@ -47,6 +47,7 @@ func main() {
 	mux.ServeFiles("/files/*filepath", http.Dir("./"))
 	mux.GET("/newUser", showAddUser)
 	mux.POST("/addUser", addUser)
+	mux.POST("/logout", logOut)
 	err := http.ListenAndServe("localhost:8080", mux)
 	handleErr(os.Stdout, err)
 }
@@ -96,7 +97,11 @@ func login(w http.ResponseWriter, user *User) {
 		err := tpl.ExecuteTemplate(w, "panel.html", data)
 		handleErr(w, err)
 	} else {
-		_, err := fmt.Fprintf(w, "welcome %v", user.Id)
+		logoutButton := `<br><form method="post" action="/logout">
+                <input type="submit" value="LogOut">
+            </form>`
+		w.Header().Set("Content-Type", "text/html")
+		_, err := fmt.Fprintf(w, "welcome %v %v", user.Id, logoutButton)
 		handleErr(w, err)
 	}
 }

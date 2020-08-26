@@ -3,6 +3,7 @@ package main
 import (
 	"errors"
 	"github.com/gofrs/uuid"
+	"github.com/julienschmidt/httprouter"
 	"golang.org/x/crypto/bcrypt"
 	"net/http"
 )
@@ -42,4 +43,18 @@ func writeSession(w http.ResponseWriter, id string) {
 		Value: userUUID.String(),
 	}
 	http.SetCookie(w, &cookie)
+}
+
+func logOut(w http.ResponseWriter, r *http.Request, _ httprouter.Params) {
+	_, err := r.Cookie("session")
+	if err != nil {
+		http.Redirect(w, r, "/", http.StatusSeeOther)
+		return
+	}
+	http.SetCookie(w, &http.Cookie{
+		Name:   "session",
+		MaxAge: -1,
+	})
+	http.Redirect(w, r, "/", http.StatusSeeOther)
+	return
 }
