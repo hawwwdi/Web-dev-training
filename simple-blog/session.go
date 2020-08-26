@@ -49,11 +49,12 @@ func writeSession(w http.ResponseWriter, id string) {
 }
 
 func logOut(w http.ResponseWriter, r *http.Request, _ httprouter.Params) {
-	_, err := r.Cookie("session")
+	cookie, err := r.Cookie("session")
 	if err != nil {
 		http.Redirect(w, r, "/", http.StatusSeeOther)
 		return
 	}
+	delete(sessionsMap, cookie.Value)
 	http.SetCookie(w, &http.Cookie{
 		Name:   "session",
 		MaxAge: -1,
