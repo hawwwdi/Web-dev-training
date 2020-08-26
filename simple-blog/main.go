@@ -63,6 +63,10 @@ func index(w http.ResponseWriter, r *http.Request, _ httprouter.Params) {
 
 func cookieLogin(w http.ResponseWriter, r *http.Request, _ httprouter.Params) {
 	user := getUser(r)
+	if user == nil {
+		http.Error(w, "invalid cookie", http.StatusBadRequest)
+		return
+	}
 	login(w, user)
 }
 

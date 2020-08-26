@@ -29,7 +29,10 @@ func checkUser(username, pass string) (*User, error) {
 }
 
 func getUser(r *http.Request) *User {
-	cookie, _ := r.Cookie("session")
+	cookie, err := r.Cookie("session")
+	if err != nil {
+		return nil
+	}
 	userId := sessionsMap[cookie.Value]
 	user := usersMap[userId]
 	return &user
