@@ -3,10 +3,10 @@ package main
 import (
 	"database/sql"
 	"fmt"
+	_ "github.com/go-sql-driver/mysql"
 	"os"
 	"runtime"
 	"time"
-	_ "github.com/go-sql-driver/mysql"
 )
 
 var db *sql.DB
@@ -25,4 +25,19 @@ func init() {
 	db.SetMaxOpenConns(10)
 	db.SetMaxIdleConns(10)
 	fmt.Println("data base connected :)")
+	creatTable()
+}
+
+func creatTable() {
+	query := `CREATE TABLE IF NOT EXISTS users
+	(
+    	id       INT AUTO_INCREMENT PRIMARY KEY,
+    	username VARCHAR(20) NOT NULL,
+    	password VARCHAR(20) NOT NULL
+	);`
+	stmt, err := db.Prepare(query)
+	handleErr(os.Stderr, err)
+	defer stmt.Close()
+	_, err1 := stmt.Exec()
+	handleErr(os.Stderr, err1)
 }
