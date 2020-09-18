@@ -22,7 +22,7 @@ func makeReq(w http.ResponseWriter, r *http.Request) {
 		fmt.Fprint(w, err.Error())
 		return
 	}
-	req, _ := http.NewRequest("GET", address, nil)
+	req, _ := http.NewRequest("GET", "http://localhost:8080/res", nil)
 	req.Header.Set("Token", jwtToken)
 	client.Lock()
 	res, err1 := client.client.Do(req)
@@ -47,6 +47,6 @@ func generateJWT() (string, error) {
 	if err != nil {
 		return "", err
 	}
-	fmt.Printf("token is: %v", tokenString)
+	fmt.Printf("token is: %v\n", tokenString)
 	return tokenString, nil
 }
