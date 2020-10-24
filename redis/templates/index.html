@@ -1,0 +1,20 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+</head>
+<body>
+    <h1>Redis db simple interface</h1>
+    <form method="POST" action="/set" enctype="multipart/form-data">
+        <input type="text" id="key" name="key" value="key">
+        <input type="text" id="value" name="value" value="value">
+        <input type="submit" value="SET">
+    </form><br>
+    <form method="POST" action="/get" enctype="multipart/form-data">
+        <input type="text" id="key" name="key" value="key">
+        <input type="submit" value="get">
+    </form><br>
+</body>
+</html>
