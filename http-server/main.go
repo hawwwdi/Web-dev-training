@@ -16,18 +16,21 @@ func init() {
 }
 
 func main() {
-	mux := http.NewServeMux()
-	mux.HandleFunc("/", serveHTTP)
-	mux.HandleFunc("/hello/", sayHello)
-	mux.HandleFunc("/redirect", redirect)
-	mux.Handle("/redirects", http.RedirectHandler("/hello/", http.StatusMovedPermanently))
-	err := http.ListenAndServe(":8080", mux)
-	if err != nil {
-		log.Fatal(err)
+	{
+		mux := http.NewServeMux()
+		mux.HandleFunc("/", serveHTTP)
+		mux.HandleFunc("/hello/", sayHello)
+		mux.HandleFunc("/redirect", redirect)
+		mux.Handle("/redirects", http.RedirectHandler("/hello/", http.StatusMovedPermanently))
+		_ = http.ListenAndServe(":8080", mux)
 	}
+	/*if err != nil {
+		log.Fatal(err)
+	}*/
+
 }
 
-func redirect(w http.ResponseWriter, r *http.Request){
+func redirect(w http.ResponseWriter, r *http.Request) {
 	fmt.Println("redirect to /hello & method = ", r.Method)
 	w.Header().Set("Location", "/hello/")
 	//w.Header().Set("Content-Type", "text/html; charset=utf-8")
@@ -38,7 +41,7 @@ func redirect(w http.ResponseWriter, r *http.Request){
 
 func sayHello(w http.ResponseWriter, r *http.Request) {
 	cookie := http.Cookie{
-		Name: "say",
+		Name:  "say",
 		Value: "hello",
 	}
 	http.SetCookie(w, &cookie)
@@ -54,7 +57,7 @@ func serveHTTP(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 	cookie := http.Cookie{
-		Name: "wolf",
+		Name:  "wolf",
 		Value: "hehehe",
 	}
 	http.SetCookie(w, &cookie)
